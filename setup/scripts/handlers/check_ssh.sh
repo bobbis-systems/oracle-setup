@@ -6,6 +6,11 @@
 
 set -e
 
+# === Load environment and logging ===
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/../../.env"
+source "$SCRIPT_DIR/../lib/log_init.sh"
+
 echo "🔍 Checking SSH service..."
 
 # Ensure SSH service is installed
@@ -29,7 +34,7 @@ fi
 
 # Optional: security check for root login
 if grep -q "^PermitRootLogin yes" /etc/ssh/sshd_config; then
-  echo "⚠️ Warning: SSH allows root login. Consider disabling this for security."
+  echo "⚠️  Warning: SSH allows root login. Consider disabling this for security."
 else
   echo "🔐 Root login over SSH is disabled or secured."
 fi

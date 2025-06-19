@@ -1,0 +1,21 @@
+#!/bin/sh
+# MOTD Segment: 30-system-health
+# Purpose: Display system health info like uptime, load, memory, and disk
+
+printf "\n🧬 System Health\n"
+printf "━━━━━━━━━━━━━━━━━━━\n"
+
+# Uptime and Load
+UPTIME=$(uptime -p | sed 's/up //')
+LOAD=$(uptime | awk -F'load average:' '{ print $2 }' | sed 's/^ //')
+echo "🕒 Uptime: $UPTIME"
+echo "📊 Load:   $LOAD"
+
+# Memory usage
+MEM_TOTAL=$(free -m | awk '/^Mem:/ {print $2}')
+MEM_USED=$(free -m | awk '/^Mem:/ {print $3}')
+echo "🧠 Memory: ${MEM_USED}MB / ${MEM_TOTAL}MB"
+
+# Disk usage for /
+DISK_USAGE=$(df -h / | awk 'NR==2 {print $3 " / " $2 " used (" $5 ")"}')
+echo "💾 Disk:   $DISK_USAGE"

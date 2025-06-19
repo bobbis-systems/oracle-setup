@@ -1,0 +1,16 @@
+#!/bin/sh
+# MOTD Segment: 10-system-info
+# Purpose: Show basic system info (hostname, IP, uptime, etc.)
+
+HOSTNAME=$(hostname)
+IP=$(hostname -I | awk '{print $1}')
+UPTIME=$(uptime -p | sed 's/up //')
+LOAD=$(cat /proc/loadavg | awk '{print $1, $2, $3}')
+MEM=$(free -m | awk '/Mem:/ {printf "%sMB used / %sMB total", $3, $2}')
+
+printf "📛 Hostname:  %s\n" "$HOSTNAME"
+printf "🌐 IP Addr:   %s\n" "$IP"
+printf "⏱️  Uptime:    %s\n" "$UPTIME"
+printf "📊 Load Avg:  %s\n" "$LOAD"
+printf "🧠 Memory:    %s\n" "$MEM"
+printf "\n"

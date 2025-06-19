@@ -14,19 +14,13 @@ sudo chmod 0440 /etc/sudoers.d/lecture
 
 # Set custom message
 sudo tee /etc/sudo_lecture > /dev/null <<'EOF'
-⚠️  YOU ARE OPERATING WITH ROOT PRIVILEGES
+⚠️  SUDO ACCESS GRANTED
 
-All actions are being logged.
-Unauthorized use may result in:
-• Job termination
-• Loss of data
-• Severe mocking from your peers
+This machine is managed by Bobbis Systems.
+All sudo actions are logged and monitored.
 
-This system is protected by advanced monitoring.
-Proceed only if you are absolutely sure.
-
-👁️ We are watching.
-🔧 Managed by Bobbis Systems
+Unauthorized use is strictly prohibited.
+Proceed with caution.
 EOF
 
 echo "✅ Sudo lecture installed."

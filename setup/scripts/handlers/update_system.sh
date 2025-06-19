@@ -6,15 +6,20 @@
 
 set -e
 
-echo "🔧 Updating system packages..."
+# === Load environment and logging ===
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/../../.env"
+source "$SCRIPT_DIR/../lib/log_init.sh"
+
+log_info "🔧 Updating system packages..."
 
 # Ensure we're on a Debian/Ubuntu-based system
 if ! command -v apt &> /dev/null; then
-  echo "❌ This system does not use apt. Skipping system update."
+  log_warn "This system does not use apt. Skipping system update."
   exit 0
 fi
 
-# Run update and upgrade
+# Update and upgrade
 sudo apt update -y && sudo apt upgrade -y
 
-echo "✅ System packages updated successfully."
+log_success "✅ System packages updated successfully."

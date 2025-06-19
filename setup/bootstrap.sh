@@ -2,66 +2,79 @@
 # =============================================
 # File: setup/bootstrap.sh
 # Description: Bootstrap script for Oracle VMs
-# Usage: curl -fsSL .../bootstrap.sh | bash
+# Usage: sudo bash -c "$(curl -fsSL https://.../bootstrap.sh)"
 # =============================================
 
 set -e
+
+# === Require root (via sudo) ===
+if [ "$EUID" -ne 0 ]; then
+  echo "❌ This script must be run with sudo:"
+  echo "   sudo bash bootstrap.sh"
+  exit 1
+fi
 
 echo "🧰 Starting oracle-setup bootstrap..."
 
 # === Ensure Git is installed ===
 if ! command -v git &>/dev/null; then
-  echo "🔧 Git is not installed. Attempting to install..."
+  echo "🔧 Git not found — installing..."
 
   if [ -f /etc/os-release ]; then
     . /etc/os-release
     case "$ID" in
       ubuntu|debian)
-        sudo apt update && sudo apt install -y git
+        apt update && apt install -y git
         ;;
       alpine)
-        sudo apk update && sudo apk add git
+        apk update && apk add git
         ;;
       centos|rhel|fedora)
-        sudo yum install -y git
+        yum install -y git
         ;;
       *)
-        echo "❌ Unsupported distro: $ID — please install Git manually."
+        echo "❌ Unsupported distro: $ID — install Git manually."
         exit 1
         ;;
     esac
   else
-    echo "❌ Unknown OS. Please install Git manually and re-run."
+    echo "❌ Unknown OS — please install Git manually."
     exit 1
   fi
 fi
 
 echo "✅ Git is available."
 
-# === Create /opt/scripts if it doesn't exist ===
+# === Create /opt/scripts if missing ===
 if [ ! -d /opt/scripts ]; then
-  echo "📁 Creating /opt/scripts directory..."
-  sudo mkdir -p /opt/scripts
-  sudo chown $USER:$USER /opt/scripts
+  echo "📁 Creating /opt/scripts..."
+  mkdir -p /opt/scripts
 fi
 
-# === Clone the repo ===
+# === Clone repo ===
 if [ -d /opt/scripts/oracle-setup ]; then
-  echo "📦 Repo already exists at /opt/scripts/oracle-setup. Skipping clone."
+  echo "📦 Repo already exists at /opt/scripts/oracle-setup — skipping clone."
 else
   echo "📥 Cloning oracle-setup..."
   git clone https://github.com/bobbis-systems/oracle-setup.git /opt/scripts/oracle-setup
 fi
 
-# === Navigate and start install ===
 cd /opt/scripts/oracle-setup/setup/
 
-# Copy .env.example if .env doesn't exist
+# === Copy .env.example if .env doesn't exist ===
 if [ ! -f .env ]; then
   cp .env.example .env
-  echo "⚠️  Remember to edit /opt/scripts/oracle-setup/setup/.env before running full install."
+  echo ""
+  echo "⚙️  A default .env file was created:"
+  echo "   /opt/scripts/oracle-setup/setup/.env"
+  echo ""
+  echo "📝 Please edit it before continuing:"
+  echo "   nano /opt/scripts/oracle-setup/setup/.env"
+  echo ""
 fi
 
-# Run the installer
-echo "🚀 Launching installer..."
-sudo bash scripts/install.sh
+# === Final instructions ===
+echo ""
+echo "✅ Bootstrap complete!"
+echo "👉 To start installation, run:"
+echo "   bash /opt/scripts/oracle-setup/setup/scripts/install.sh"

@@ -1,0 +1,27 @@
+#!/bin/sh
+# MOTD Segment: 20-network
+# Purpose: Show internal/external IP addresses and hostname
+
+printf "\n📡 Network Information\n"
+printf "━━━━━━━━━━━━━━━━━━━━━━━━\n"
+
+# Hostname
+printf "Hostname: %s\n" "$(hostname)"
+
+# Internal IP (from default route)
+INTERNAL_IP=$(ip route get 1.1.1.1 2>/dev/null | awk '/src/ {print $7; exit}')
+[ -n "$INTERNAL_IP" ] && printf "Internal IP: %s\n" "$INTERNAL_IP"
+
+# External IP (fallback method)
+EXTERNAL_IP=$(curl -s --max-time 2 https://api.ipify.org)
+[ -n "$EXTERNAL_IP" ] && printf "External IP: %s\n" "$EXTERNAL_IP"
+
+# Optional: Oracle VNIC metadata
+ORACLE_METADATA_URL="http://169.254.169.254/opc/v1/vnics/"
+if curl -s --connect-timeout 1 "$ORACLE_METADATA_URL" | grep -q "privateIp"; then
+  PRIVATE_IP=$(curl -s "$ORACLE_METADATA_URL" | grep -oP '"privateIp"\s*:\s*"\K[^"]+')
+  PUBLIC_IP=$(curl -s "$ORACLE_METADATA_URL" | grep -oP '"publicIp"\s*:\s*"\K[^"]+')
+
+  [ -n "$PRIVATE_IP" ] && printf "Oracle Private IP: %s\n" "$PRIVATE_IP"
+  [ -n "$PUBLIC_IP" ] && printf "Oracle Public IP: %s\n" "$PUBLIC_IP"
+fi

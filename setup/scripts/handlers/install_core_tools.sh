@@ -6,6 +6,11 @@
 
 set -e
 
+# === Load environment and logging ===
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/../../.env"
+source "$SCRIPT_DIR/../lib/log_init.sh"
+
 echo "🛠️ Installing core tools..."
 
 # Ensure we're on a Debian/Ubuntu-based system
@@ -14,7 +19,7 @@ if ! command -v apt &> /dev/null; then
   exit 0
 fi
 
-# Install useful core packages
+# Install all useful core packages (let apt handle installed checks)
 sudo apt update
 sudo apt install -y \
   nano \

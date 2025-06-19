@@ -1,5 +1,5 @@
 #!/bin/sh
-# MOTD Segment: 20-docker-status
+# MOTD Segment: 21-docker-status
 # Purpose: Check Docker status and display version
 
 if ! command -v docker >/dev/null 2>&1; then

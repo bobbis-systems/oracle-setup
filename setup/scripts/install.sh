@@ -52,10 +52,6 @@ if [ "$SETUP_MOTD" = "true" ]; then
   bash "$SCRIPT_DIR/handlers/setup_motd.sh"
 fi
 
-if [ "$ADD_ALIASES" = "true" ]; then
-  bash "$SCRIPT_DIR/handlers/setup_aliases.sh"
-fi
-
 # === Finalize ===
 bash "$SCRIPT_DIR/handlers/verify_install.sh"
 

@@ -2,7 +2,7 @@
 # =============================================
 # File: setup/bootstrap.sh
 # Description: Bootstrap script for Oracle VMs
-# Usage: sudo bash -c "$(curl -fsSL https://.../bootstrap.sh)"
+# Usage: sudo bash -c "$(curl -fsSL https://raw.githubusercontent.com/bobbis-systems/oracle-setup/main/setup/bootstrap.sh)"
 # =============================================
 
 set -e
@@ -64,25 +64,19 @@ cd /opt/scripts/oracle-setup/setup/
 # === Copy .env.example if .env doesn't exist ===
 if [ ! -f .env ]; then
   cp .env.example .env
-  echo ""
-  echo "⚙️  A default .env file was created:"
+  echo "⚙️  A default .env file was created at:"
   echo "   /opt/scripts/oracle-setup/setup/.env"
-  echo ""
-  echo "📝 Please edit it before continuing:"
-  echo "   nano /opt/scripts/oracle-setup/setup/.env"
-  echo ""
 fi
 
+# === Make scripts executable ===
 echo "🔧 Making scripts executable..."
 chmod +x /opt/scripts/oracle-setup/setup/scripts/*.sh
 chmod +x /opt/scripts/oracle-setup/setup/scripts/handlers/*.sh
+chmod +x /opt/scripts/oracle-setup/setup/preinstall.sh
 
-
-
-# === Final instructions ===
+# === Final step: launch wizard ===
 echo ""
 echo "✅ Bootstrap complete!"
-echo "👉 To start installation, run:"
-echo "   sudo bash /opt/scripts/oracle-setup/setup/scripts/install.sh"
+echo "🚀 Launching interactive setup..."
 
-
+bash /opt/scripts/oracle-setup/setup/preinstall.sh

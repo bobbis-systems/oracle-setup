@@ -6,6 +6,11 @@
 
 set -e
 
+# === Load environment and logging ===
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/../../.env"
+source "$SCRIPT_DIR/../lib/log_init.sh"
+
 echo "👤 Creating user: $CREATE_USER"
 
 # Check if user already exists

@@ -1,0 +1,9 @@
+#!/bin/sh
+# MOTD Segment: 30-footer
+# Purpose: Footer message with branding and system integrity reminder
+
+printf "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+printf "🔒 Managed by Bobbis Systems. All actions are logged.\n"
+printf "📜 For support, consult your local DevOps overlord.\n"
+printf "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+printf "\n"

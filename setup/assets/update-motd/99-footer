@@ -1,5 +1,5 @@
 #!/bin/sh
-# MOTD Segment: 30-footer
+# MOTD Segment: 99-footer
 # Purpose: Footer message with branding and system integrity reminder
 
 printf "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"

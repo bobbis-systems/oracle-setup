@@ -6,13 +6,25 @@
 
 set -e
 
-echo "🎭 Installing custom sudo lecture..."
+# === Load environment and logging ===
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/../../.env"
+source "$SCRIPT_DIR/../lib/log_init.sh"
 
-# Enable lecture always
+log_info "🎭 Installing custom sudo lecture..."
+
+# === Ensure sudoers.d exists ===
+if [ ! -d /etc/sudoers.d ]; then
+  log_warn "Creating missing sudoers.d directory..."
+  sudo mkdir -p /etc/sudoers.d
+  sudo chmod 0750 /etc/sudoers.d
+fi
+
+# === Always show lecture ===
 echo "Defaults        lecture=always" | sudo tee /etc/sudoers.d/lecture > /dev/null
 sudo chmod 0440 /etc/sudoers.d/lecture
 
-# Set custom message
+# === Set custom lecture message ===
 sudo tee /etc/sudo_lecture > /dev/null <<'EOF'
 ⚠️  SUDO ACCESS GRANTED
 
@@ -23,4 +35,4 @@ Unauthorized use is strictly prohibited.
 Proceed with caution.
 EOF
 
-echo "✅ Sudo lecture installed."
+log_success "✅ Sudo lecture installed successfully."

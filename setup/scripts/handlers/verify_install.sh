@@ -6,43 +6,51 @@
 
 set -e
 
-echo "🔎 Verifying installation..."
+# === Load env and logging ===
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/../../.env"
+source "$SCRIPT_DIR/../lib/log_init.sh"
 
-# Check Docker
+log_info "🔎 Starting post-install verification..."
+
+# Docker check
 if command -v docker &> /dev/null; then
-  echo "🐳 Docker installed: $(docker --version)"
+  DOCKER_VER=$(docker --version)
+  log_success "🐳 Docker installed: $DOCKER_VER"
 else
-  echo "❌ Docker not found"
+  log_error "❌ Docker not found"
 fi
 
-# Check Docker Compose
+# Docker Compose check
 if docker compose version &> /dev/null; then
-  echo "🧩 Docker Compose: $(docker compose version)"
+  DOCKER_COMPOSE_VER=$(docker compose version)
+  log_success "🧩 Docker Compose: $DOCKER_COMPOSE_VER"
 else
-  echo "❌ Docker Compose not available"
+  log_error "❌ Docker Compose not available"
 fi
 
-# Check user
-if [ ! -z "$CREATE_USER" ] && id "$CREATE_USER" &> /dev/null; then
-  echo "👤 User $CREATE_USER exists"
-  groups "$CREATE_USER"
+# User check
+if [ -n "$CREATE_USER" ] && id "$CREATE_USER" &> /dev/null; then
+  log_success "👤 User '$CREATE_USER' exists"
+  USER_GROUPS=$(groups "$CREATE_USER" | cut -d: -f2)
+  log_info "📦 Groups: $USER_GROUPS"
 else
-  echo "❌ User $CREATE_USER not found"
+  log_error "❌ User '$CREATE_USER' not found"
 fi
 
-# Check firewall
+# Firewall (UFW) check
 if command -v ufw &> /dev/null; then
-  echo "🛡️ UFW status:"
-  sudo ufw status verbose
+  UFW_STATUS=$(sudo ufw status verbose)
+  log_info "🛡️ UFW status:\n$UFW_STATUS"
 else
-  echo "⚠️ UFW not installed or not found"
+  log_warn "⚠️ UFW not installed or not found"
 fi
 
-# Check SSH
+# SSH check
 if systemctl is-active --quiet ssh; then
-  echo "🔐 SSH is running"
+  log_success "🔐 SSH is running"
 else
-  echo "⚠️ SSH not running"
+  log_warn "⚠️ SSH is not running"
 fi
 
-echo "✅ Verification complete."
+log_success "✅ Verification complete."

@@ -1,0 +1,21 @@
+#!/bin/sh
+# MOTD Segment: 21-firewall-status
+# Purpose: Display UFW firewall status
+
+printf "\n🛡️ Firewall Status (UFW)\n"
+printf "━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+
+if command -v ufw >/dev/null 2>&1; then
+  STATUS=$(ufw status | head -n 1)
+  echo "$STATUS"
+
+  RULES=$(ufw status | tail -n +2)
+  if [ -n "$RULES" ]; then
+    echo "$RULES" | head -n 5
+    [ "$(echo "$RULES" | wc -l)" -gt 5 ] && echo "… (more rules hidden)"
+  else
+    echo "No active rules."
+  fi
+else
+  echo "❌ UFW not installed or not found."
+fi

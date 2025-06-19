@@ -1,0 +1,15 @@
+#!/bin/sh
+# MOTD Segment: 20-docker-status
+# Purpose: Check Docker status and display version
+
+if ! command -v docker >/dev/null 2>&1; then
+  echo "🐳 Docker: Not installed"
+  exit 0
+fi
+
+DOCKER_VERSION=$(docker --version 2>/dev/null)
+DOCKER_STATUS=$(systemctl is-active docker)
+
+printf "🐳 Docker:     %s\n" "$DOCKER_VERSION"
+printf "🔌 Status:     %s\n" "$DOCKER_STATUS"
+printf "\n"

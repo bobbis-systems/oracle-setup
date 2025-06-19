@@ -73,8 +73,16 @@ if [ ! -f .env ]; then
   echo ""
 fi
 
+echo "🔧 Making scripts executable..."
+chmod +x /opt/scripts/oracle-setup/setup/scripts/*.sh
+chmod +x /opt/scripts/oracle-setup/setup/scripts/handlers/*.sh
+
+
+
 # === Final instructions ===
 echo ""
 echo "✅ Bootstrap complete!"
 echo "👉 To start installation, run:"
-echo "   bash /opt/scripts/oracle-setup/setup/scripts/install.sh"
+echo "   sudo bash /opt/scripts/oracle-setup/setup/scripts/install.sh"
+
+
